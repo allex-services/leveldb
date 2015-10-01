@@ -1,4 +1,4 @@
-var leveldown = require('level');
+var levelup = require('level');
 
 function createLevelDBService(execlib, ParentServicePack) {
   'use strict';
@@ -15,12 +15,17 @@ function createLevelDBService(execlib, ParentServicePack) {
 
   function LevelDBService(prophash) {
     ParentService.call(this, prophash);
-    this.db = level(prophash.dbname, lib.extend({}, prophash.dbcreationoptions));
+    this.db = levelup(prophash.dbname, lib.extend({}, prophash.dbcreationoptions));
+    this.dbput = q.nbind(this.db.put, this.db);
+    this.dbget = q.nbind(this.db.get, this.db);
   }
   
   ParentService.inherit(LevelDBService, factoryCreator);
   
   LevelDBService.prototype.__cleanUp = function() {
+    this.dbget = null;
+    this.dbput = null;
+    this.db = null;
     ParentService.prototype.__cleanUp.call(this);
   };
 
