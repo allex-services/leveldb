@@ -10,9 +10,6 @@
     "type": "git",
     "url": "git@gitlab.hers.rs:allex_services/leveldb.git"
   },
-  "dependencies": {
-    "level": "1.3.0"
-  },
   "keywords": [
     "ecosystem:allex",
     "Service",

@@ -1,11 +1,9 @@
-var levelup = require('level'),
-  child_process = require('child_process');
-
-function createLevelDBService(execlib, ParentServicePack) {
+function createLevelDBService(execlib, ParentServicePack, leveldblib) {
   'use strict';
   var lib = execlib.lib,
     q =lib.q,
-    ParentService = ParentServicePack.Service;
+    ParentService = ParentServicePack.Service,
+    LevelDBHandler = leveldblib.LevelDBHandler;
 
   function factoryCreator(parentFactory) {
     return {
@@ -16,17 +14,12 @@ function createLevelDBService(execlib, ParentServicePack) {
 
   function LevelDBService(prophash) {
     ParentService.call(this, prophash);
-    this.db = null;
-    this.dbput = null;
-    this.dbget = null;
-    if (prophash.initiallyemptydb) {
-      child_process.exec('rm -rf '+prophash.dbname, this.createDB.bind(this, prophash));
-    } else {
-      this.createDB(prophash);
-    }
+    prophash.starteddefer = this.readyToAcceptUsersDefer;
+    LevelDBHandler.call(this, prophash);
   }
   
   ParentService.inherit(LevelDBService, factoryCreator);
+  lib.inheritMethods(LevelDBService, LevelDBHandler, 'setDB', 'createDB');
   
   LevelDBService.prototype.__cleanUp = function() {
     this.dbget = null;
@@ -37,15 +30,6 @@ function createLevelDBService(execlib, ParentServicePack) {
 
   LevelDBService.prototype.isInitiallyReady = function (propertyhash) {
     return !propertyhash.initiallyemptydb;
-  };
-
-  LevelDBService.prototype.createDB = function (prophash) {
-    this.db = levelup(prophash.dbname, lib.extend({}, prophash.dbcreationoptions));
-    this.dbput = q.nbind(this.db.put, this.db);
-    this.dbget = q.nbind(this.db.get, this.db);
-    if (this.readyToAcceptUsersDefer) {
-      this.readyToAcceptUsersDefer.resolve(true);
-    }
   };
 
   LevelDBService.prototype.propertyHashDescriptor = {
