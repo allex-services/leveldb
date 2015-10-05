@@ -19,7 +19,7 @@ function createLevelDBService(execlib, ParentServicePack, leveldblib) {
   }
   
   ParentService.inherit(LevelDBService, factoryCreator);
-  lib.inheritMethods(LevelDBService, LevelDBHandler, 'setDB', 'createDB');
+  lib.inheritMethods(LevelDBService, LevelDBHandler, 'setDB', 'createDB', 'getReadStream');
   
   LevelDBService.prototype.__cleanUp = function() {
     this.dbget = null;
