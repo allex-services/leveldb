@@ -38,6 +38,8 @@ function createLevelDBService(execlib, ParentServicePack, leveldblib) {
     }
   };
   
+  execlib.leveldblib = leveldblib;
+  
   return LevelDBService;
 }
 
