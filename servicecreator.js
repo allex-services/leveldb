@@ -19,7 +19,7 @@ function createLevelDBService(execlib, ParentServicePack, leveldblib) {
   }
   
   ParentService.inherit(LevelDBService, factoryCreator);
-  lib.inheritMethods(LevelDBService, LevelDBHandler, 'setDB', 'createDB', 'getReadStream', 'readInto', 'streamInto', 'traverse');
+  lib.inheritMethods(LevelDBService, LevelDBHandler, 'setDB', 'createDB', 'getReadStream', 'readInto', 'streamInto', 'traverse', 'onLevelDBCreated');
   
   LevelDBService.prototype.__cleanUp = function() {
     this.dbget = null;
@@ -29,7 +29,7 @@ function createLevelDBService(execlib, ParentServicePack, leveldblib) {
   };
 
   LevelDBService.prototype.isInitiallyReady = function (propertyhash) {
-    return !propertyhash.initiallyemptydb;
+    return true;
   };
 
   LevelDBService.prototype.propertyHashDescriptor = {
