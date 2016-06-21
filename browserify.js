@@ -1,1 +1,1 @@
-ALLEX.execSuite.registry.add('allex_leveldbservice',require('./clientside')(ALLEX, ALLEX.execSuite.registry.get('.')));
+ALLEX.execSuite.registry.registerClientSide('allex_leveldbservice',require('./sinkmapcreator')(ALLEX, ALLEX.execSuite.registry.getClientSide('.')));

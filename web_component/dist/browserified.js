@@ -1,24 +1,11 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-ALLEX.execSuite.registry.add('allex_leveldbservice',require('./clientside')(ALLEX, ALLEX.execSuite.registry.get('.')));
+ALLEX.execSuite.registry.registerClientSide('allex_leveldbservice',require('./sinkmapcreator')(ALLEX, ALLEX.execSuite.registry.getClientSide('.')));
 
-},{"./clientside":2}],2:[function(require,module,exports){
-function createClientSide(execlib) {
-  'use strict';
-  var execSuite = execlib.execSuite,
-  ParentServicePack = execSuite.registry.get('.');
-
-  return {
-    SinkMap: require('./sinkmapcreator')(execlib, ParentServicePack)
-  };
-}
-
-module.exports = createClientSide;
-
-},{"./sinkmapcreator":5}],3:[function(require,module,exports){
+},{"./sinkmapcreator":4}],2:[function(require,module,exports){
 module.exports = {
 };
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 module.exports = {
   read: [{
     title: 'Read stream Options',
@@ -40,7 +27,7 @@ module.exports = {
   }]
 };
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 function sinkMapCreator(execlib, ParentServicePack) {
   'use strict';
   var sinkmap = new (execlib.lib.Map), ParentSinkMap = ParentServicePack.SinkMap;
@@ -52,7 +39,7 @@ function sinkMapCreator(execlib, ParentServicePack) {
 
 module.exports = sinkMapCreator;
 
-},{"./sinks/servicesinkcreator":6,"./sinks/usersinkcreator":7}],6:[function(require,module,exports){
+},{"./sinks/servicesinkcreator":5,"./sinks/usersinkcreator":6}],5:[function(require,module,exports){
 function createServiceSink(execlib, ParentSink) {
   'use strict';
   if (!ParentSink) {
@@ -72,7 +59,7 @@ function createServiceSink(execlib, ParentSink) {
 
 module.exports = createServiceSink;
 
-},{"../methoddescriptors/serviceuser":3}],7:[function(require,module,exports){
+},{"../methoddescriptors/serviceuser":2}],6:[function(require,module,exports){
 function createUserSink(execlib, ParentSink) {
   'use strict';
   if (!ParentSink) {
@@ -92,4 +79,4 @@ function createUserSink(execlib, ParentSink) {
 
 module.exports = createUserSink;
 
-},{"../methoddescriptors/user":4}]},{},[1]);
+},{"../methoddescriptors/user":3}]},{},[1]);
