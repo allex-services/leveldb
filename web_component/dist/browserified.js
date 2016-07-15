@@ -28,9 +28,9 @@ module.exports = {
 };
 
 },{}],4:[function(require,module,exports){
-function sinkMapCreator(execlib, ParentServicePack) {
+function sinkMapCreator(execlib, ParentSinkMap) {
   'use strict';
-  var sinkmap = new (execlib.lib.Map), ParentSinkMap = ParentServicePack.SinkMap;
+  var sinkmap = new (execlib.lib.Map);
   sinkmap.add('service', require('./sinks/servicesinkcreator')(execlib, ParentSinkMap.get('service')));
   sinkmap.add('user', require('./sinks/usersinkcreator')(execlib, ParentSinkMap.get('user')));
   
