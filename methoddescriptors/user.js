@@ -1,4 +1,19 @@
 module.exports = {
+  put: [{
+    title: 'Key',
+    anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
+  },{
+    title: 'Value',
+    anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
+  }],
+  get: [{
+    title: 'Key',
+    anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
+  }],
+  del: [{
+    title: 'Key',
+    anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
+  }],
   read: [{
     title: 'Read stream Options',
     type: 'object'

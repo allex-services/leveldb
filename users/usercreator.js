@@ -1,12 +1,42 @@
-function createUser(execlib, ParentUser) {
+function createUser(execlib, ParentUser, leveldblib) {
   'use strict';
   var lib = execlib.lib,
     q = lib.q,
-    _readStreamHandlers = new lib.Map();
+    qlib = lib.qlib,
+    _readStreamHandlers = new lib.Map(),
+    HookableUserSessionMixin = leveldblib.HookableUserSessionMixin;
 
   if (!ParentUser) {
     ParentUser = execlib.execSuite.ServicePack.Service.prototype.userFactory.get('user');
   }
+
+  var UserSession = ParentUser.prototype.getSessionCtor('.'),
+    Channel = UserSession.Channel;
+
+  function HookChannel (usersession){
+    Channel.call(this, usersession);
+  }
+  lib.inherit(HookChannel, Channel);
+  HookChannel.prototype.name = 'l';
+
+  function HookSession (user, session, gate) {
+    UserSession.call(this, user, session, gate);
+    HookableUserSessionMixin.call(this, this.user.__service);
+    this.addChannel(HookChannel);
+  }
+
+  UserSession.inherit(HookSession, HookableUserSessionMixin.__methodDescriptors);
+  HookableUserSessionMixin.addMethods(HookSession);
+
+  HookSession.prototype.__cleanUp = function () {
+    HookableUserSessionMixin.prototype.destroy.call(this);
+    UserSession.prototype.__cleanUp.call(this);
+  };
+
+  HookSession.Channel = HookChannel;
+
+
+
 
   function User(prophash) {
     ParentUser.call(this, prophash);
@@ -15,6 +45,37 @@ function createUser(execlib, ParentUser) {
   ParentUser.inherit(User, require('../methoddescriptors/user'), [/*visible state fields here*/]/*or a ctor for StateStream filter*/);
   User.prototype.__cleanUp = function () {
     ParentUser.prototype.__cleanUp.call(this);
+  };
+
+  User.prototype.put = function (key, value, defer) {
+    qlib.promise2defer(this.__service.put(key, value), defer);
+  };
+
+  function geterrorer (defer, error) {
+  }
+
+  User.prototype.get = function (key, defer) {
+    var error = lib.Error;
+    this.__service.get(key).then(
+      function (result) {
+        defer.resolve(result);
+        defer = null;
+        error = null;
+      },
+      function (err) {
+        if (error.NotFound) {
+          defer.reject(new error('VALUE_NOT_FOUND'));
+        } else {
+          defer.reject(error);
+        }
+        defer = null;
+        error = null;
+      }
+    );
+  };
+
+  User.prototype.del = function (key, defer) {
+    qlib.promise2defer(this.__service.del(key), defer);
   };
 
   User.prototype.read = function (options, defer) {
@@ -126,6 +187,8 @@ function createUser(execlib, ParentUser) {
     }
     this.destroy();
   };
+
+  User.prototype.getSessionCtor = execlib.execSuite.userSessionFactoryCreator(HookSession);
 
   return User;
 }

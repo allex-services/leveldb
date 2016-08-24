@@ -1,19 +1,19 @@
-function createLevelDBService(execlib, ParentServicePack, leveldblib) {
+function createLevelDBService(execlib, ParentService, leveldblib) {
   'use strict';
   var lib = execlib.lib,
     q =lib.q,
-    ParentService = ParentServicePack.Service,
     LevelDBHandler = leveldblib.LevelDBHandler;
 
   function factoryCreator(parentFactory) {
     return {
       'service': require('./users/serviceusercreator')(execlib, parentFactory.get('service')),
-      'user': require('./users/usercreator')(execlib, parentFactory.get('user')) 
+      'user': require('./users/usercreator')(execlib, parentFactory.get('user'), leveldblib) 
     };
   }
 
   function LevelDBService(prophash) {
     ParentService.call(this, prophash);
+    prophash.listenable = true;
     prophash.starteddefer = this.readyToAcceptUsersDefer;
     LevelDBHandler.call(this, prophash);
   }
@@ -25,11 +25,12 @@ function createLevelDBService(execlib, ParentServicePack, leveldblib) {
     this.dbget = null;
     this.dbput = null;
     this.db = null;
+    LevelDBHandler.prototype.destroy.call(this);
     ParentService.prototype.__cleanUp.call(this);
   };
 
   LevelDBService.prototype.isInitiallyReady = function (propertyhash) {
-    return true;
+    return false;
   };
 
   LevelDBService.prototype.propertyHashDescriptor = {
