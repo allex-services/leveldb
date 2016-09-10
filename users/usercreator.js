@@ -74,6 +74,10 @@ function createUser(execlib, ParentUser, leveldblib) {
     );
   };
 
+  User.prototype.safeGet = function (key, deflt, defer) {
+    qlib.promise2defer(this.__service.safeGet(key, deflt), defer);
+  };
+
   User.prototype.del = function (key, defer) {
     qlib.promise2defer(this.__service.del(key), defer);
   };

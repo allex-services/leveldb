@@ -10,6 +10,12 @@ module.exports = {
     title: 'Key',
     anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
   }],
+  safeGet: [{
+    title: 'Key',
+    anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
+  },{
+    title: 'Default'
+  }],
   del: [{
     title: 'Key',
     anyOf: [{type: 'array'}, {type: 'object'}, {type: 'string'}, {type: 'number'}]
