@@ -1,0 +1,10 @@
+[
+  {
+    "modulename": "allex_leveldbservice",
+    "instancename": "LDB",
+    "propertyhash": {
+      "listenable": true,
+      "dbname": "test.db"
+    }
+  }
+]

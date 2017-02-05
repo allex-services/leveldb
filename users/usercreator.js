@@ -4,37 +4,30 @@ function createUser(execlib, ParentUser, leveldblib) {
     q = lib.q,
     qlib = lib.qlib,
     _readStreamHandlers = new lib.Map(),
-    HookableUserSessionMixin = leveldblib.HookableUserSessionMixin;
+    QuerableUserSessionMixin = leveldblib.QuerableUserSessionMixin;
 
   if (!ParentUser) {
     ParentUser = execlib.execSuite.ServicePack.Service.prototype.userFactory.get('user');
   }
 
-  var UserSession = ParentUser.prototype.getSessionCtor('.'),
-    Channel = UserSession.Channel;
+  var UserSession = ParentUser.prototype.getSessionCtor('.');
 
-  function HookChannel (usersession){
-    Channel.call(this, usersession);
-  }
-  lib.inherit(HookChannel, Channel);
-  HookChannel.prototype.name = 'l';
-
-  function HookSession (user, session, gate) {
+  function QuerableSession (user, session, gate) {
     UserSession.call(this, user, session, gate);
-    HookableUserSessionMixin.call(this, this.user.__service);
-    this.addChannel(HookChannel);
+    QuerableUserSessionMixin.call(this);
   }
 
-  UserSession.inherit(HookSession, HookableUserSessionMixin.__methodDescriptors);
-  HookableUserSessionMixin.addMethods(HookSession);
+  UserSession.inherit(QuerableSession, lib.extend(
+    {},
+    {query: QuerableUserSessionMixin.queryMethodParamDescriptor},
+    QuerableUserSessionMixin.stopQueryMethodDescriptor
+  ));
+  QuerableUserSessionMixin.addMethods(QuerableSession);
 
-  HookSession.prototype.__cleanUp = function () {
-    HookableUserSessionMixin.prototype.destroy.call(this);
+  QuerableSession.prototype.__cleanUp = function () {
     UserSession.prototype.__cleanUp.call(this);
   };
-
-  HookSession.Channel = HookChannel;
-
+  QuerableSession.prototype.query = QuerableUserSessionMixin.queryMethodGenerator(null);
 
 
 
@@ -192,7 +185,7 @@ function createUser(execlib, ParentUser, leveldblib) {
     this.destroy();
   };
 
-  User.prototype.getSessionCtor = execlib.execSuite.userSessionFactoryCreator(HookSession);
+  User.prototype.getSessionCtor = execlib.execSuite.userSessionFactoryCreator(QuerableSession);
 
   return User;
 }
