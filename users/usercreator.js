@@ -10,6 +10,10 @@ function createUser(execlib, ParentUser, leveldblib) {
     ParentUser = execlib.execSuite.ServicePack.Service.prototype.userFactory.get('user');
   }
 
+  function servicereturner (service) {
+    return service;
+  }
+
   var UserSession = ParentUser.prototype.getSessionCtor('.');
 
   function QuerableSession (user, session, gate) {
@@ -27,7 +31,7 @@ function createUser(execlib, ParentUser, leveldblib) {
   QuerableSession.prototype.__cleanUp = function () {
     UserSession.prototype.__cleanUp.call(this);
   };
-  QuerableSession.prototype.query = QuerableUserSessionMixin.queryMethodGenerator(null);
+  QuerableSession.prototype.query = QuerableUserSessionMixin.queryMethodGenerator(servicereturner, 'query');
 
 
 
