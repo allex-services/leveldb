@@ -1,6 +1,6 @@
 {
   "name": "allex_leveldbservice",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "LevelDBService",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.hers.rs:allex_services/leveldb.git"
+    "url": "git@github.com:allex-services/leveldb.git"
   },
   "keywords": [
     "ecosystem:allex",

@@ -4,7 +4,7 @@ function createServicePack(execlib) {
 
   return {
     service : {
-      dependencies : ['.', 'allex:leveldb:lib']
+      dependencies : ['.', 'allex_leveldblib']
     },
     sinkmap : {
       dependencies: ['.']

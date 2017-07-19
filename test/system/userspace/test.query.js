@@ -70,7 +70,7 @@ function doWrite (res) {
 }
 
 describe('Testing Query', function () {
-  loadClientSide(['allex:leveldb:lib']);
+  loadClientSide(['allex_leveldblib']);
   findSinkIt({
     sinkname: 'LDB'
   });
